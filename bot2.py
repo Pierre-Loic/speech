@@ -104,31 +104,37 @@ def selectRequest(data, dataTable, whereCol = "NULL", whereVal = "NULL" ):
 
 def bobot(result):
     while 1:
-
         requetesur = ""
-        question = result
+        question = result.text.rstrip(".")
         question = question.lower()
         ListeMots = makeListe(question)
+        print(ListeMots)
         ListeInfosDemand = []
         ListeTypeInfosDemand = []
         CompteurdINFOS = 0
         nomintero=""
-        if(greeting(questi)!=None):
-            return greeting(questi)
+
+        if(greeting(question)!=None):
+            return greeting(question)
         if question != "q":
+            print(question)
             for mot in ListeMots:
                 if ditSImotRECONNU(mot) == True:
+                    print("TRUE")
                     paramrequet = donnelemotCLEF(mot)
                     if paramrequet == "prenom":
                         nomintero= mot.capitalize()
+                        print(nomintero)
 
             for mot in ListeMots:
                 if ditSImotRECONNU(mot) == True:
                     paramrequet = donnelemotCLEF(mot)
+                    print("paramrequet =", paramrequet)
                     if paramrequet != "prenom" and nomintero != "":
                         CompteurdINFOS = CompteurdINFOS + 1
                         ListeTypeInfosDemand.append(paramrequet)
                         infosurNOM = selectRequest(paramrequet, "Students", "prenom", nomintero)
+                        print("info =", infosurNOM)
                         for i in infosurNOM:
                             ListeInfosDemand.append(i)
 
@@ -136,9 +142,7 @@ def bobot(result):
             for i in range(0, CompteurdINFOS):
                 RepBOT="{}: {}".format(ListeTypeInfosDemand[i],ListeInfosDemand[i])
                 ListeRepBOT.append(RepBOT)
-                #print(ListeRepBOT)
             StringRepBot = ", ".join(ListeRepBOT)
-            #print(StringRepBot)
             if CompteurdINFOS == 1:
                 return "Tu as demandé {} info sur {}, la voici : ".format(CompteurdINFOS, nomintero) + StringRepBot
             elif CompteurdINFOS > 1:
@@ -149,5 +153,6 @@ def bobot(result):
         else:
             return "Ciao"
 
-if __main__ == '__main__':
-    bobot(result)
+if __name__ == '__main__':
+    test = bobot(result)
+    print(test)
