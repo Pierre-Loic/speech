@@ -1,6 +1,38 @@
 import pymysql
 import pymysql.cursors
 import random
+import azure.cognitiveservices.speech as speechsdk
+
+# Creates an instance of a speech config with specified subscription key and service region.
+# Replace with your own subscription key and service region (e.g., "westus").
+speech_key, service_region = "a2591d3a8359420eaf24cb8e4534aa03", "francecentral"
+speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region, speech_recognition_language ="fr-FR")
+
+# Creates a recognizer with the given settings
+speech_recognizer = speechsdk.SpeechRecognizer(speech_config=speech_config)
+
+print("Say something...")
+
+
+# Starts speech recognition, and returns after a single utterance is recognized. The end of a
+# single utterance is determined by listening for silence at the end or until a maximum of 15
+# seconds of audio is processed.  The task returns the recognition text as result.
+# Note: Since recognize_once() returns only a single utterance, it is suitable only for single
+# shot recognition like command or query.
+# For long-running multi-utterance recognition, use start_continuous_recognition() instead.
+result = speech_recognizer.recognize_once()
+
+# Checks result.
+if result.reason == speechsdk.ResultReason.RecognizedSpeech:
+    print("Recognized: {}".format(result.text))
+elif result.reason == speechsdk.ResultReason.NoMatch:
+    print("No speech could be recognized: {}".format(result.no_match_details))
+elif result.reason == speechsdk.ResultReason.Canceled:
+    cancellation_details = result.cancellation_details
+    print("Speech Recognition canceled: {}".format(cancellation_details.reason))
+    if cancellation_details.reason == speechsdk.CancellationReason.Error:
+        print("Error details: {}".format(cancellation_details.error_details))
+
 
 GREETING_INPUTS = ("bonjour", "salut", "yo", "salutations", "sup","hey",)
 GREETING_RESPONSES = ["Bonjour", "Yo", "Salut!", "Salutations", "hey"]
@@ -70,13 +102,11 @@ def selectRequest(data, dataTable, whereCol = "NULL", whereVal = "NULL" ):
 
 
 
-def bobot(questi):
-    #print("Bonjour!")
-
+def bobot(result):
     while 1:
 
         requetesur = ""
-        question = questi
+        question = result
         question = question.lower()
         ListeMots = makeListe(question)
         ListeInfosDemand = []
@@ -92,8 +122,6 @@ def bobot(questi):
                     if paramrequet == "prenom":
                         nomintero= mot.capitalize()
 
-                        #print(nomintero)
-
             for mot in ListeMots:
                 if ditSImotRECONNU(mot) == True:
                     paramrequet = donnelemotCLEF(mot)
@@ -104,9 +132,6 @@ def bobot(questi):
                         for i in infosurNOM:
                             ListeInfosDemand.append(i)
 
-            #print(ListeInfosDemand)
-            #print(ListeTypeInfosDemand)
-            #print(CompteurdINFOS)
             ListeRepBOT = []
             for i in range(0, CompteurdINFOS):
                 RepBOT="{}: {}".format(ListeTypeInfosDemand[i],ListeInfosDemand[i])
@@ -123,3 +148,6 @@ def bobot(questi):
 
         else:
             return "Ciao"
+
+if __main__ == '__main__':
+    bobot(result)
