@@ -12,7 +12,7 @@ def greeting(sentence):
             return random.choice(GREETING_RESPONSES)
 
 dico={"nom": ['toblome ', 'coste', 'vavrille', 'oroudjian', 'kettab', 'dentand', 'ros', 'flaus', 'champredon', 'scheurer', 'guseynov', 'arethens', 'tin', 'fulleringer', 'merel', 'mai'],
-      "prenom":['kodjo', 'christine', 'nory', 'haikouhi', 'bachir', 'arthur', 'hugo', 'théo', 'marina', 'timothée', 'rustam', 'emmanuel', 'william', 'adrien', 'caroline', 'dao'],
+      "prenom":['kodjo ', 'christine', 'nory', 'haikouhi', 'bachir', 'arthur', 'hugo', 'théo', 'marina', 'timothée', 'rustam', 'emmanuel', 'william', 'adrien', 'caroline', 'dao'],
       "date_naissance":['date','Date','naissance','birthday', 'anniversaire','né','date','née'],
       "lat":['lieu','vacance','lat','lattitude','paradis'],
       "lon":['lieu','vacance','longitude','Longitude','paradis'],
@@ -69,47 +69,57 @@ def selectRequest(data, dataTable, whereCol = "NULL", whereVal = "NULL" ):
         connection.close()
 
 
-print("Bonjour!")
 
-while 1:
-    question = input()
-    question = question.lower()
-    ListeMots = makeListe(question)
-    ListeInfosDemand = []
-    ListeTypeInfosDemand = []
-    CompteurdINFOS = 0
-    nomintero=""
+def bobot(questi):
+    #print("Bonjour!")
 
-    if(greeting(question)!=None):
-        print(greeting(question))
-    if question != "q":
-        for mot in ListeMots:
-            if ditSImotRECONNU(mot) == True:
-                paramrequet = donnelemotCLEF(mot)
-                if paramrequet == "prenom":
-                    nomintero= mot.capitalize()
-        for mot in ListeMots:
-            if ditSImotRECONNU(mot) == True:
-               paramrequet = donnelemotCLEF(mot)
-               if paramrequet != "prenom" and nomintero != "":
-                   CompteurdINFOS = CompteurdINFOS + 1
-                   ListeTypeInfosDemand.append(paramrequet)
-                   infosurNOM = selectRequest(paramrequet, "Students", "prenom", nomintero)
-                   for i in infosurNOM:
-                       ListeInfosDemand.append(i)
+    while 1:
 
-        ListeRepBOT = []
-        for i in range(0, CompteurdINFOS):
-            RepBOT="{}: {}".format(ListeTypeInfosDemand[i],ListeInfosDemand[i])
-            ListeRepBOT.append(RepBOT)
-        StringRepBot = ", ".join(ListeRepBOT)
+        requetesur = ""
+        question = questi
+        question = question.lower()
+        ListeMots = makeListe(question)
+        ListeInfosDemand = []
+        ListeTypeInfosDemand = []
+        CompteurdINFOS = 0
+        nomintero=""
+        if(greeting(questi)!=None):
+            return greeting(questi)
+        if question != "q":
+            for mot in ListeMots:
+                if ditSImotRECONNU(mot) == True:
+                    paramrequet = donnelemotCLEF(mot)
+                    if paramrequet == "prenom":
+                        nomintero= mot.capitalize()
 
-        if CompteurdINFOS == 1:
-            print("Tu as demandé {} info sur {}, la voici : ".format(CompteurdINFOS, nomintero) + StringRepBot)
-        elif CompteurdINFOS > 1:
-            print("Tu as demandé {} infos sur {}, les voici : ".format(CompteurdINFOS, nomintero) + StringRepBot)
+                        #print(nomintero)
+
+            for mot in ListeMots:
+                if ditSImotRECONNU(mot) == True:
+                    paramrequet = donnelemotCLEF(mot)
+                    if paramrequet != "prenom" and nomintero != "":
+                        CompteurdINFOS = CompteurdINFOS + 1
+                        ListeTypeInfosDemand.append(paramrequet)
+                        infosurNOM = selectRequest(paramrequet, "Students", "prenom", nomintero)
+                        for i in infosurNOM:
+                            ListeInfosDemand.append(i)
+
+            #print(ListeInfosDemand)
+            #print(ListeTypeInfosDemand)
+            #print(CompteurdINFOS)
+            ListeRepBOT = []
+            for i in range(0, CompteurdINFOS):
+                RepBOT="{}: {}".format(ListeTypeInfosDemand[i],ListeInfosDemand[i])
+                ListeRepBOT.append(RepBOT)
+                #print(ListeRepBOT)
+            StringRepBot = ", ".join(ListeRepBOT)
+            #print(StringRepBot)
+            if CompteurdINFOS == 1:
+                return "Tu as demandé {} info sur {}, la voici : ".format(CompteurdINFOS, nomintero) + StringRepBot
+            elif CompteurdINFOS > 1:
+                return "Tu as demandé {} infos sur {}, les voici : ".format(CompteurdINFOS, nomintero) + StringRepBot
+            else:
+                return "En quoi puis-je t'aider ? "
+
         else:
-            print("En quoi puis-je t'aider ? ")
-    else:
-        print("Ciao")
-
+            return "Ciao"
