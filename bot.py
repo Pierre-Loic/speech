@@ -107,8 +107,10 @@ while 1:
 
         if CompteurdINFOS == 1:
             print("Tu as demandé {} info sur {}, la voici : ".format(CompteurdINFOS, nomintero) + StringRepBot)
-        else:
+        elif CompteurdINFOS > 1:
             print("Tu as demandé {} infos sur {}, les voici : ".format(CompteurdINFOS, nomintero) + StringRepBot)
+        else:
+            print("En quoi puis-je t'aider ? ")
     else:
         print("Ciao")
 
