@@ -3,6 +3,10 @@ import pymysql.cursors
 import random
 import azure.cognitiveservices.speech as speechsdk
 
+
+#TODO ajouter la librairie difflib
+
+
 # Creates an instance of a speech config with specified subscription key and service region.
 # Replace with your own subscription key and service region (e.g., "westus").
 speech_key, service_region = "a2591d3a8359420eaf24cb8e4534aa03", "francecentral"
@@ -108,7 +112,6 @@ def bobot(result):
         question = result.text.rstrip(".")
         question = question.lower()
         ListeMots = makeListe(question)
-        print(ListeMots)
         ListeInfosDemand = []
         ListeTypeInfosDemand = []
         CompteurdINFOS = 0
@@ -120,21 +123,17 @@ def bobot(result):
             print(question)
             for mot in ListeMots:
                 if ditSImotRECONNU(mot) == True:
-                    print("TRUE")
                     paramrequet = donnelemotCLEF(mot)
                     if paramrequet == "prenom":
                         nomintero= mot.capitalize()
-                        print(nomintero)
 
             for mot in ListeMots:
                 if ditSImotRECONNU(mot) == True:
                     paramrequet = donnelemotCLEF(mot)
-                    print("paramrequet =", paramrequet)
                     if paramrequet != "prenom" and nomintero != "":
                         CompteurdINFOS = CompteurdINFOS + 1
                         ListeTypeInfosDemand.append(paramrequet)
                         infosurNOM = selectRequest(paramrequet, "Students", "prenom", nomintero)
-                        print("info =", infosurNOM)
                         for i in infosurNOM:
                             ListeInfosDemand.append(i)
 
